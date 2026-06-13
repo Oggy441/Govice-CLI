@@ -1,0 +1,22 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables & secrets
+.env
+
+# Session & User Data
+data/sessions/*.json
+!data/sessions/.gitkeep
+
+# Environments & Virtual Environments
+.venv/
+venv/
+ENV/
+
+# IDE / Editor config
+.vscode/
+.idea/
+*.swp
+*.swo
