@@ -41,8 +41,8 @@ COMMAND_MAP = {
 
 # Style for the prompt
 prompt_style = Style.from_dict({
-    'prompt': '#006d77 bold',
-    'arrow': '#e29578 bold',
+    'prompt': '#006d77',
+    'arrow': '#e29578',
 })
 
 async def check_or_prompt_api_key() -> bool:
