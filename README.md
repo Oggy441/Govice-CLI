@@ -1,105 +1,104 @@
-# Govice CLI
-### Your AI-Powered Terminal Travel Companion
+# ✈️ Travel-CLI: AI Travel Agent
 
-```
- ██████╗  ██████╗ ██╗    ██╗██╗ ██████╗███████╗
-██╔════╝ ██╔═══██╗██║   ██║██║██╔════╝██╔════╝
-██║  ███╗██║   ██║██║   ██║██║██║     █████╗  
-██║   ██║██║   ██║╚██╗ ██╔╝██║██║     ██╔══╝  
-╚██████╔╝╚██████╔╝ ╚████╔╝ ██║╚██████╗███████╗
- ╚═════╝  ╚═════╝   ╚═══╝  ╚═╝ ╚═════╝╚══════╝
-```
+Travel-CLI is an interactive, AI-powered command-line interface designed to help you plan your next adventure. Powered by Google Gemini, it combines a conversational AI agent with structured commands to manage itineraries, budgets, and travel logistics.
 
-**Govice CLI** (Go + Advice) is a premium terminal-based AI travel assistant that provides real-time information, budget estimates, local points of interest, weather forecasts, and structured day-by-day travel itineraries. Powered by a conversational AI agent (Gemini 2.5 Flash / Gemma) and integrating live public APIs, it features a polished, responsive command-line UI built with `rich` and `prompt_toolkit`.
+## 🚀 Getting Started
 
----
+### Prerequisites
+- Python 3.10+
+- A Google Gemini API Key (get one for free at [Google AI Studio](https://aistudio.google.com/))
 
-## 🌟 Key Features
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd travel-cli
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-- **Interactive AI Chatbot**: Talk to a travel agent that maintains context of your destination, budget, and travel length. Supports automatic function-calling (weather, attractions, currency rates).
-- **Day-by-Day Itineraries**: Generate detailed daily schedules, dining ideas, and transport recommendations using `/plan`.
-- **Live Weather Updates**: Fetch real-time weather and a 3-day forecast for any city worldwide using Open-Meteo.
-- **Accommodation & POI Recommendations**: Discover top-rated local tourist attractions and recommended hotels (budget, mid-range, luxury).
-- **Flight Route Estimates**: Query estimates for airlines, duration, and pricing structures between cities.
-- **Budgeting Tool**: Generate detailed itemized travel expenses (accommodation, food, activities) converted to your preferred currency.
-- **Session Persistence**: Easily save and resume your custom travel plans and chat logs to JSON files.
+### Configuration
+The application requires a Google Gemini API key to enable the conversational AI agent. You can provide it in three ways:
 
----
+1. **Environment Variable (Recommended for Production):**
+   ```bash
+   export GEMINI_API_KEY="your_api_key_here"
+   ```
+2. **`.env` File (Project Root):**
+   Create a file named `.env` in the project root with the following content:
+   ```ini
+   GEMINI_API_KEY="your_api_key_here"
+   ```
+3. **Interactive Setup:** Simply run the application. If no key is found, the CLI will prompt you to enter your key and offer to save it to a `.env` file for future sessions.
 
-## 🚀 Setup & Installation
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/Oggy441/Govice-CLI.git
-cd Govice-CLI
-```
-
-### 2. Set Up a Virtual Environment (Optional but Recommended)
-```bash
-python -m venv venv
-# On Windows:
-venv\Scripts\activate
-# On macOS/Linux:
-source venv/bin/activate
-```
-
-### 3. Install Dependencies
-Ensure you have the required dependencies installed:
-```bash
-pip install google-genai httpx python-dotenv prompt-toolkit rich
-```
-
-### 4. Configure Environment Variables
-Create a `.env` file in the root directory (or copy `.env.example` if available):
-```env
-GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-2.5-flash # or gemini-2.0-flash / gemma-4-31b-it
-
-# Optional keys for live Local Attractions
-GEOAPIFY_API_KEY=your_geoapify_key
-OPENTRIPMAP_API_KEY=your_opentripmap_key
-```
-
-*Note: If a `GEMINI_API_KEY` is not present on launch, the CLI will prompt you to enter one directly.*
-
----
+Additional configuration options (default currency, autosave behavior, etc.) can be modified in `config.py`.
 
 ## 🛠 Usage
 
-To launch the Govice CLI:
+Start the agent by running the main entry point:
 ```bash
 python main.py
 ```
 
-### Verification
-You can verify that the third-party integrations (weather, currency rates, geocoding) are configured and functioning correctly by running:
-```bash
-python verify_apis.py
+### Conversational Mode
+Simply type your requests naturally! The agent can help you brainstorm destinations, suggest activities, and refine your travel plans. It maintains context about your destination, budget, duration, and saved itinerary.
+*Example: "I want to visit Japan for 10 days in October with a $3000 budget. What cities should I visit?"*
+
+### Slash Commands
+For structured actions and session management, use the following commands. Arguments containing spaces should be quoted (e.g., `/plan "Paris, France" 7`).
+
+| Command | Description | Example Usage |
+| :--- | :--- | :--- |
+| `/plan` | Generate a structured travel itinerary for the current context. | `/plan` or `/plan "Tokyo, Japan" 14` |
+| `/weather` | Check weather forecasts for the destination. | `/weather` or `/weather "London, UK"` |
+| `/flights` | Search for flight options (requires origin/destination in context or args). | `/flights` or `/flights "JFK" "HND"` |
+| `/hotels` | Find accommodation recommendations. | `/hotels` or `/hotels "Paris, France"` |
+| `/budget` | Manage and calculate travel expenses. | `/budget` or `/budget add "Flight" 500` |
+| `/save` | Manually save the current session to a named file. | `/save my_trip` |
+| `/load` | Restore a previously saved session by name. | `/load my_trip` |
+| `/clear` | Clear the current session context and history. | `/clear` |
+| `/help` | Display the help menu with command details. | `/help` |
+| `/exit` | Close the application (aliases: `/quit`). | `/exit` |
+
+## 🧠 Features
+- **Persistent Memory:** The CLI automatically saves your session to an `autosave` file on every interaction, allowing you to resume your planning with full context and chat history intact.
+- **Context-Aware AI Agent:** The `TravelAgent` tracks your destination, budget, duration, currency, and itinerary throughout the conversation to provide highly relevant, personalized suggestions.
+- **Rich Terminal UI:** Built with `rich` and `prompt_toolkit`, featuring themed colors, a dynamic status bar (showing destination, days, budget), and command auto-completion.
+- **Graceful Fallbacks:** If the AI agent fails to initialize (e.g., missing API key), the system remains fully functional through the command-driven interface.
+- **Session Management:** Full save/load/clear workflow for managing multiple trip plans.
+- **API Verification Utility:** Includes `verify_apis.py` to validate connectivity to external travel APIs (Amadeus, OpenWeather, etc.) before planning.
+
+## 📂 Project Structure
+```
+travel-cli/
+├── main.py              # Application entry point, REPL loop, command routing
+├── agent.py             # TravelAgent class: Gemini integration, chat history, tool use
+├── api.py               # External API clients (Amadeus, OpenWeather, etc.)
+├── config.py            # Configuration management (API keys, defaults, .env handling)
+├── session.py           # TripContext: state management, serialization, autosave
+├── verify_apis.py       # Script to verify external API connectivity
+├── commands/            # Slash command implementations
+│   ├── __init__.py
+│   ├── budget.py
+│   ├── flights.py
+│   ├── hotels.py
+│   ├── plan.py
+│   ├── session_cmds.py
+│   └── weather.py
+└── ui/                  # User interface components
+    ├── __init__.py
+    ├── components.py    # Rich renderables (banner, status bar, help panel)
+    └── theme.py         # Color themes and console style definitions
 ```
 
----
+## 🤝 Contributing
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
-## 📖 Command Reference
-
-Govice CLI supports a variety of slash commands for targeted travel planning tasks:
-
-| Command | Description | Example |
-| :--- | :--- | :--- |
-| `/plan <destination> <days>` | Generate a day-by-day travel itinerary | `/plan Tokyo 5` |
-| `/weather <city>` | Fetch live weather details and forecast | `/weather Paris` |
-| `/flights <from> <to> <date>` | Estimate flight routes and cost ranges | `/flights NYC Tokyo 2026-09-01` |
-| `/hotels <city>` | Get points of interest and hotel details | `/hotels Rome` |
-| `/budget <destination> <days>` | Generate estimated expense breakdown | `/budget Iceland 7` |
-| `/save <name>` | Save active session context to disk | `/save my_japan_trip` |
-| `/load <name>` | Load a previously saved trip session | `/load my_japan_trip` |
-| `/clear` | Reset active trip context and chat history | `/clear` |
-| `/exit` | Exit the travel assistant | `/exit` |
-
----
-
-## 🎨 Design Theme
-Adhering to modern visual aesthetics, the CLI utilizes a custom terminal stylesheet:
-- **Primary Teal (`#006d77`)**: Emphasized accents and console statuses.
-- **Secondary Warm Sand (`#e29578`)**: Context indicators and tables.
-- **Amber Gold (`#e9c46a`)**: Highlights and command usage suggestions.
-- **Dark Charcoal Background**: Optimized for modern terminals.
+## 📄 License
+This project is licensed under the MIT License.
